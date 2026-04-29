@@ -12,13 +12,10 @@ logging.basicConfig(
 )
 
 def main():
-    # Получаем токен из ENV или используем токен по умолчанию
-    token = os.getenv("BOT_API_TOKEN") or "vk1.a.CkPgupAiYsZNaeUMoopB1SzXeShDo2gndVLxtiWSvJ1LZ5-X3aXw_-YyrCyCtAD6aPwzJMmkZXDFn4lMK0gT3n7-1lbedKDmdjrSe-9OZGbwfGToCYM3V9OdsZN3xB0E7lH3p084Yp2ffFn308fZ5N2xFhomSvF97k8DxxXqwkbsUPnTKQsv6DvosUqaWwkCqUMIQTDfkg8BCumwpCyoQ"
-    
-    if not token or token.startswith("vk1."):
-        logging.info("✅ Токен получен")
-    else:
-        logging.error("❌ Токен недействителен!")
+    # Получаем токен из переменных окружения (безопасно для хостинга)
+    token = os.getenv("BOT_API_TOKEN")
+    if not token:
+        logging.error("❌ Переменная окружения VK_GROUP_TOKEN не установлена!")
         return
 
     # Инициализация VK API и Long Poll
@@ -29,12 +26,14 @@ def main():
     # Основной цикл событий
     for event in longpoll.listen():
         try:
+            # Обрабатываем только новые сообщения от пользователей
             if event.type != VkBotEventType.MESSAGE_NEW or not event.from_user:
                 continue
 
             msg = event.obj['message']['text'].strip().lower()
             peer_id = event.obj['message']['peer_id']
 
+            # Пример простой логики
             if msg in ("привет", "hi", "здравствуй"):
                 vk.method("messages.send", {
                     "peer_id": peer_id,
