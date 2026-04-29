@@ -1,9 +1,7 @@
-import json
-from fastapi import FastAPI, Request, Response
 import os
 import requests
-
-app = FastAPI()
+import hmac
+import hashlib
 
 # 🔐 ВСТАВЬ СВОИ ДАННЫЕ НИЖЕ (между кавычками)
 CONFIRMATION_CODE = "05b07636"      # ← сюда строку подтверждения
@@ -12,35 +10,22 @@ SECRET_KEY = "23i12r19i72n"           # ← сюда секретный ключ
 
 VK_API = "https://api.vk.com/method"
 
-def send_message(peer_id: int, text: str):
+def send_message(peer_id, text):
     requests.post(f"{VK_API}/messages.send", {
         "peer_id": peer_id,
         "message": text,
         "random_id": 0,
-        "access_token": GROUP_TOKEN,
-        "v": "5.199"
-    })
+        "access_token": G… # 2. Сообщение
+    if event_type == 'message_new':
+        msg = body['object']['message']
+        peer_id = msg['peer_id']
+        text = msg.get('text', '').lower()
 
-@app.post("/")
-async def webhook(request: Request):
-    data = await request.json()
-    event_type = data.get("type")
-
-    # 1. Подтверждение сервера
-    if event_type == "confirmation":
-        return Response(content=CONFIRMATION_CODE, media_type="text/plain")
-
-    # 2. Входящее сообщение
-    if event_type == "message_new":
-        msg = data["object"]["message"]
-        peer_id = msg["peer_id"]
-        text = msg.get("text", "").lower()
-
-        if "привет" in text:
-            send_message(peer_id, "Привет! Я работаю на Vercel 🚀")
-        elif "как дела" in text:
-            send_message(peer_id, "Всё отлично! Напиши 'привет'")
+        if 'привет' in text:
+            send_message(peer_id, 'Привет! Я работаю на Yandex Cloud ☁️')
+        elif 'как дела' in text:
+            send_message(peer_id, 'Всё отлично!')
         else:
-            send_message(peer_id, "Напиши 'привет' или 'как дела'")
+            send_message(peer_id, 'Я пока умею только здороваться. Напиши "привет".')
 
-    return Response(status_code=200)
+    return {'statusCode': 200, 'body': 'ok'}
