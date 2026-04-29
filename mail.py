@@ -1,48 +1,21 @@
-import vk_api
-from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
-import time
-
-# Ваш токен
-TOKEN = "vk1.a.CkPgupAiYsZNaeUMoopB1SzXeShDo2gndVLxtiWSvJ1LZ5-X3aXw_-YyrCyCtAD6aPwzJMmkZXDFn4lMK0gT3n7-1lbedKDmdjrSe-9OZGbwfGToCYM3V9OdsZN3xB0E7lH3p084Yp2ffFn308fZ5N2xFhomSvF97k8DxxXqwkbsUPnTKQsv6DvosUqaWwkCqUMIQTDfkg8BCumwpCyoQ"
-GROUP_ID = "1425493f"  # <-- ЗАМЕНИТЕ НА СВОЙ ID!
-
-print("🚀 Запуск бота...")
-
-# Авторизация
-vk_session = vk_api.VkApi(token=TOKEN)
-longpoll = VkBotLongPoll(vk_session, GROUP_ID)
-
-print("✅ Бот запущен и готов к работе!")
-
-# Бесконечный цикл
-for event in longpoll.listen():
-    if event.type == VkBotEventType.MESSAGE_NEW and event.from_user:
-        message_text = event.obj['message']['text'].lower().strip()
-        user_id = event.obj['message']['from_id']
-        
-        print(f"📩 Сообщение от {user_id}: {message_text}")
-        
-        # Ответы на команды
-        if message_text in ['привет', 'hi', 'здравствуй']:
-            vk_session.method('messages.send', {
-                'user_id': user_id,
-                'message': 'Привет! Я работаю! 👋',
-                'random_id': int(time.time() * 1000)
-            })
-            print(f"✅ Ответ отправлен пользователю {user_id}")
-            
-        elif message_text == 'помощь':
-            vk_session.method('messages.send', {
-                'user_id': user_id,
-                'message': 'Команды:\n- привет\n- помощь\n- время',
-                'random_id': int(time.time() * 1000)
-            })
-            
-        elif message_text == 'время':
-            from datetime import datetime
-            now = datetime.now().strftime("%H:%M:%S")
-            vk_session.method('messages.send', {
-                'user_id': user_id,
-                'message': f'Сейчас {now}',
-                'random_id': int(time.time() * 1000)
-            })
+import asyncio
+from vkbottle.bot import Bot, Message
+# Замени на свой токен сообщества
+TOKEN = "vk1.a.TTUwA_6B6ZWp-bZTn9AWUDt3UJxHjzEJ6oivPZ2Jc_AfdLk39xo2V_VIwSqiASAwrIkdlRZP3B0saOOFQuDquYO2eP3tAhRrcvIG26KtPi7CpJFNQoydvwK1LbBa82Tx3yUEpxjnmgW0oIYklKO2HL9X0xXoJk7JC0NLA9vCZppPErMlO4IBNW3tJ2-Nu9-CUwZ_N3TpkKx8YRClCJZctg"
+bot = Bot(token=TOKEN)
+@bot.on.message(text=["привет", "здравствуй", "хай", "hi", "hello"])
+async def greet_handler(message: Message):
+await message.answer("Привет! Я бот этого сообщества 🤖")
+@bot.on.message(text=["что ты умеешь", "помощь", "/help"])
+async def help_handler(message: Message):
+await message.answer(
+"Я умею:\n"
+"• Отвечать на приветствия\n"
+"• Рассказывать о себе\n"
+"\nНапиши «привет» чтобы начать!"
+)
+@bot.on.message()
+async def fallback_handler(message: Message):
+await message.answer("Не понял тебя 🤔 Напиши «помощь» чтобы узнать что я умею.")
+if __name__ == "__main__":
+bot.run_forever()
