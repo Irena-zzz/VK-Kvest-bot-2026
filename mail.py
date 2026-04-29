@@ -8,14 +8,16 @@ app = Flask(__name__)
 CONFIRMATION = "1425493f"
 TOKEN = "vk1.a.TTUwA_6B6ZWp-bZTn9AWUDt3UJxHjzEJ6oivPZ2Jc_AfdLk39xo2V_VIwSqiASAwrIkdlRZP3B0saOOFQuDquYO2eP3tAhRrcvIG26KtPi7CpJFNQoydvwK1LbBa82Tx3yUEpxjnmgW0oIYklKO2HL9X0xXoJk7JC0NLA9vCZppPErMlO4IBNW3tJ2-Nu9-CUwZ_N3TpkKx8YRClCJZctg"
 
+@app.route('/webhook', methods=['POST'])
 @app.route('/', methods=['POST'])
+@app.route('/api/webhook', methods=['POST'])
 def webhook():
     data = request.json
     event = data.get('type')
     
     # Подтверждение
     if event == 'confirmation':
-        return Response(CONFIRMATION, status=200, mimetype='text/plain')
+        return Response(CONIRMATION, status=200, mimetype='text/plain')
     
     # Сообщение
     if event == 'message_new':
