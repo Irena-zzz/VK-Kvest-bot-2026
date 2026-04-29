@@ -4,7 +4,7 @@ import time
 
 # Ваш токен
 TOKEN = "vk1.a.CkPgupAiYsZNaeUMoopB1SzXeShDo2gndVLxtiWSvJ1LZ5-X3aXw_-YyrCyCtAD6aPwzJMmkZXDFn4lMK0gT3n7-1lbedKDmdjrSe-9OZGbwfGToCYM3V9OdsZN3xB0E7lH3p084Yp2ffFn308fZ5N2xFhomSvF97k8DxxXqwkbsUPnTKQsv6DvosUqaWwkCqUMIQTDfkg8BCumwpCyoQ"
-GROUP_ID = 05b07636  # <-- ЗАМЕНИТЕ НА СВОЙ ID!
+GROUP_ID = "1425493f"  # <-- ЗАМЕНИТЕ НА СВОЙ ID!
 
 print("🚀 Запуск бота...")
 
